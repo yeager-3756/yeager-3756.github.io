@@ -1,0 +1,512 @@
+/*
+##############################################################################
+#     LightWeight JQuery                                                     #
+#     Copyright (C) 2009  Darrin Yeager                                      #
+#     All rights reserved.                                                   #
+#     http://www.dyeager.org                                                 #
+#     BSD Licensed                                                           #
+#                                                                            #
+#  Version 1.0.3                                                             #
+#                                                                            #
+# Redistribution and use in source and binary forms, with or without         #
+# modification, are permitted provided that the following conditions         #
+# are met:                                                                   #
+#                                                                            #
+#   1. Redistributions of source code must retain the above copyright        #
+#      notice, this list of conditions and the following disclaimer.         #
+#                                                                            #
+#   2. Redistributions in binary form must reproduce the above copyright     #
+#      notice, this list of conditions and the following disclaimer in the   #
+#      documentation and/or other materials provided with the distribution.  #
+#                                                                            #
+#   3. Neither the name of Darrin Yeager nor the names of any contributors   #
+#      may be used to endorse or promote products derived from this software #
+#      without specific prior written permission.                            #
+#                                                                            #
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS        #
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT          #
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR      # 
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT       #
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,      #
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED   #
+# TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR     #
+# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF     #
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING       #
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS         #
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.               #
+#                                                                            #
+##############################################################################
+*/
+
+(function($){
+	var copyright = "LWJQ 1.0.3 Copyright 2009 Darrin Yeager http://www.dyeager.org/ Licensed under BSD License";
+	/************************************************************
+	        Pop-up Tips.
+	*************************************************************/
+
+	/* 
+		CSS:
+			#LWJQ_tip{border:2px solid black;background:#EEE}
+			#LWJQ_tip_close{background:#CCC;margin:0;padding:3px}
+			#LWJQ_tip_title{backgroundr:#555;color:#FFF;
+				padding:2px;text-align:center;font-weight:bold}
+			#LWJQ_tip_text{padding:4px}
+	*/
+	$.fn.LWJQ_tip = function(options) {
+		var options = $.extend({},$.fn.LWJQ_tip.defaults, options);
+		return this.each(function() {
+			$(this).css('cursor','help');
+			$(this).hover(function(evt){
+				var pos = new Position();
+				calcposition(pos,evt.pageX,
+					$(this).offset().top + this.offsetHeight,
+					options.tip_width);
+				popup_ajax($(this).attr('href'),pos,
+					"Information",options.defaultCSS,false);
+			},
+				function(){$('#LWJQ_tip').hide().remove();} //onexithover
+			);
+			$(this).click(function(evt){evt.preventDefault();});
+    	});
+	}
+
+	$.LWJQ_popupAJAX = function(args_in) {
+		var args = $.extend({},popup_defaults,args_in);
+		var pos = new Position();
+		if (typeof(args.url) == "undefined")
+			throw "URL must be given for AJAX popup";
+		calcposition(pos,args.x,args.y,args.width);
+		popup_ajax(args.url,pos,args.title,args.defaultCSS,true);
+	}
+
+	$.LWJQ_popupText = function(args_in) {
+		var args = $.extend({},popup_defaults,args_in);
+		var pos = new Position();
+		calcposition(pos,args.x,args.y,args.width);
+		popup_text(args.text,pos,args.title,args.defaultCSS,true);
+	}
+	
+
+	function ESC_down(event) {
+		if (event.keyCode == 27) {
+			$('#LWJQ_tip').hide().remove();
+			$(document).unbind("keydown",ESC_down);
+		}
+	}
+
+	function closebutton() {
+		$('#LWJQ_tip_title').after("<p id='LWJQ_tip_close'><a href='#' id='LWJQ_tip_close_a'>Close</a> (or ESC)</p>");
+		$('#LWJQ_tip_close_a').click(function(evt) {
+			evt.preventDefault();
+			$('#LWJQ_tip').hide().remove();
+			$(document).unbind("keydown",ESC_down);
+		});
+	}
+
+	function tipdefaultCSS() {
+		$('#LWJQ_tip').css({border:'2px solid black',backgroundColor:'#EEE'});
+		$('#LWJQ_tip_close').css({backgroundColor:'#CCC',margin:0,padding:'3px',textAlign:'right',fontSize:'80%',fontFamily:'verdana,arial,sans-serif'});
+		$('#LWJQ_tip_title').css({backgroundColor:'#555',color:'#FFF',
+			padding:'2px',textAlign:'center',fontWeight:'bold'});
+		$('#LWJQ_tip_text').css({padding:'4px'});
+		$('#LWJQ_tip_loader').append('<p>Loading...</p>');
+	}
+
+	function popup_ajax(urlx,pos,window_title,defaultCSS,addclosebutton) {
+		$('#LWJQ_tip').remove();
+		$("body").append("<div id='LWJQ_tip'><div id='LWJQ_tip_title'>"+window_title+"</div><div id='LWJQ_tip_text'><div id='LWJQ_tip_loader'></div></div></div>");
+		$('#LWJQ_tip').css({left:pos.x+"px",top:pos.y+"px",
+		width:pos.width+"px",position:'absolute',zIndex:100});
+		if (addclosebutton)
+			closebutton();
+		if (defaultCSS)
+			tipdefaultCSS();
+		$('#LWJQ_tip').show();
+		$(document).bind("keydown",ESC_down);
+		$('#LWJQ_tip_text').load(urlx);
+	}
+
+	function popup_text(text,pos,window_title,defaultCSS,addclosebutton) {
+		$('#LWJQ_tip').remove();
+		$("body").append("<div id='LWJQ_tip'><div id='LWJQ_tip_title'>"+window_title+"</div><div id='LWJQ_tip_text'>" + text + "<div id='LWJQ_tip_loader'></div></div></div>");
+		$('#LWJQ_tip_text').html(text);
+		$('#LWJQ_tip').css({left:pos.x+"px",top:pos.y+"px",
+		width:pos.width+"px",position:'absolute',zIndex:100});
+		if (addclosebutton)
+			closebutton();
+		if (defaultCSS)
+			tipdefaultCSS();
+		$('#LWJQ_tip').show();
+		$(document).bind("keydown",ESC_down);
+	}
+
+	// plugin defaults
+	$.fn.LWJQ_tip.defaults = {
+		tip_width:550,
+		defaultCSS:false
+	};
+
+	// popup window defaults
+	popup_defaults = {
+		x:10,
+		y:10,
+		width:$.fn.LWJQ_tip.defaults.tip_width,
+		title:"Information",
+		defaultCSS:$.fn.LWJQ_tip.defaults.defaultCSS
+	};
+
+	/************************************************************
+	        Accordion
+	*************************************************************/
+	/* HTML:
+		<div id="accordion">
+			<h3>Section 1</h3>
+				<div>Content</div>
+			<h3>Section 2</h3>
+				<div>Content</div>
+		</div>
+		
+		header can be changed via options.header, defaults to h3
+		
+	*/
+
+	$.fn.LWJQ_accordion  = function(options) {
+		var options = $.extend({},$.fn.LWJQ_accordion.defaults, options);
+		return this.each(function() {
+			$(this).children(options.header +' + div').hide();
+			$(this).children(options.header).css('cursor','pointer')
+
+			if (options.trigger === 'hover') {
+				$(this).children(options.header).hover(function(evt) {
+					evt.preventDefault();
+					accordion_action($(this),options.mode);
+				});
+			} else {
+				$(this).children(options.header).click(function(evt) {
+					evt.preventDefault();
+					accordion_action($(this),options.mode);
+				});
+			}	
+    	});
+	}
+
+	function accordion_action(id,mode) {
+		if (mode === 'onetabopen') {
+		 	/*only one open at a time*/
+			//$(this).next().slideDown().siblings('div:visible').slideUp();
+			var nd = id.next();
+			var vs = nd.siblings('div:visible');
+			if (vs.length) {
+				vs.slideUp('normal',function() {
+					nd.slideToggle();
+				});
+			}
+			else
+				nd.slideToggle();
+		}
+		else {
+			// independent - open and close any
+			id.next().slideToggle();
+		}
+	}
+	
+	$.fn.LWJQ_accordion.defaults = {
+		mode:'onetabopen',
+		trigger:'click',
+		header:'h3'
+	};
+
+	/************************************************************
+	        Tabs
+	*************************************************************/
+	/* 
+	HTML:
+		<div id="LWJQ_tabs">
+		<ul id="LWJQ_tabnav">
+			<li><a href="#tabs-1">Tab 1 Title</a></li>
+			<li><a href="#tabs-2">Tab Two Title</a></li>
+			<li><a href="#tabs-3">Tab Three Title</a></li>
+		</ul>
+
+		<div id="tabs-1"></div>
+		<div id="tabs-2"></div>
+		<div id="tabs-3"></div>
+		</div> // end of tabs
+
+		id's can be anything, but the href's *should* match the id's of
+		the divisions below, so when javascript is disabled the links
+		will work normally.
+		
+	Recommend CSS as a starting point(colors of course can
+			(and should) be changed.
+	div,li,ul{margin:0;padding:0;}
+	body{background:#FFF;}
+	#LWJQ_tabs{}
+	#LWJQ_tabnav{border-bottom:2px solid #53390F;width:100%;
+		margin:0 !important;}
+	#LWJQ_tabnav:after{display:block;clear:both;content:" ";}
+	#LWJQ_tabnav li{float:left;list-style:none;margin:0 -2px -2px 10px;
+		padding:3px 4px 2px;font-weight:bold;border:2px solid #53390F;
+		border-bottom:none;}
+	#LWJQ_tabnav li a{display:block;position:relative;text-decoration:none;}
+	#LWJQ_tabnav li a:hover,#LWJQ_tabnav li:hover,#LWJQ_tabnav li.hover{
+		background-color:#0F2953 !important;color:#FFF !important;}
+	#LWJQ_tabnav li:hover,#LWJQ_tabnav li.hover{border-bottom:2px solid #0F2953 !important;}
+	#LWJQ_tabnav li.tab-active{background:#FFF;border-bottom:2px solid #FFF;}
+	#LWJQ_tabnav li.tab-inactive{background:#D4AD6C;border-bottom:2px solid #53390F;}
+	#LWJQ_tabnav li.tab-inactive a{color:#555;}
+	#LWJQ_tabnav li a, #LWJQ_tabnav a:active,#LWJQ_tabnav a:visited{
+		color:#000;outline:none;}
+		
+	*/
+
+	$.fn.LWJQ_tabs = function(options) {
+		var options = $.extend({},$.fn.LWJQ_tabs.defaults, options);
+		return this.each(function() {
+			var tabid = $(this);
+			//get navagation ul, which MUST be first child of div.
+			var tabnav = $(this).find(":first-child");
+			// hide all tab content and then show first tab content
+			tabid.children('div').hide();
+			tabid.children('ul + div').show();
+			// disable ALL tabs and then make first one active
+			tabnav.find('li').addClass(options.tabInactiveClassName);
+			tabnav.find('li:first-child').removeClass(options.tabInactiveClassName).addClass(options.tabActiveClassName);
+			
+			tabnav.find('li').click(function(event) {
+				//get a href of LI
+				var link = $(this).children('a').attr('href');
+				// disable all tabs and enable selected tab
+				tabnav.find('li').removeClass(options.tabActiveClassName).addClass(options.tabInactiveClassName);
+				$(this).removeClass(options.tabInactiveClassName).addClass(options.tabActiveClassName);
+				// hide all tab content and show selected content
+				tabid.children('div:visible').hide();
+				$(link).fadeIn();
+				event.preventDefault();
+			});
+			// since hover isn't well-supported on elements, use a function
+			//   This doesn't *have* to be done, but since browsers don't always
+			//   support CSS2 completly, it's a hack.
+			tabnav.find('li').hover(function(event) {
+				$(this).toggleClass(options.liHoverClassName);
+			}, function(event) {
+				$(this).toggleClass(options.liHoverClassName);
+			});
+		});
+	};
+	
+	$.fn.LWJQ_tabs.defaults = {
+		liHoverClassName:'hover',
+		tabActiveClassName:'tab-active',
+		tabInactiveClassName:'tab-inactive'
+	};
+
+
+	/************************************************************
+	        LWJQ Pullquote
+	*************************************************************/
+	$.fn.LWJQ_pullquote = function(options) {
+		var options = $.extend({},$.fn.LWJQ_pullquote.defaults, options);
+		return this.each(function() {
+			$('<blockquote></blockquote>')
+				.addClass(options.className)
+				.html($('<p></p>').html($(this).text()))
+			.prependTo($(this).parent());
+    	});
+	}
+	// plugin defaults
+	$.fn.LWJQ_pullquote.defaults = {
+		className:'pullquote'
+	};
+
+	/************************************************************
+	        LWJQ Endnote
+	*************************************************************/
+	/* CSS
+	span.LWJQ_endnotereference{vertical-align:super;
+		font-size:70%;display:none;}
+	span.LWJQ_endnotereference:before{content:'[';}
+	span.LWJQ_endnotereference:after{content:']';}
+
+	p.LWJQ_endnote{margin:.1em 0;padding:.1em;}
+	p.LWJQ_endnote span.LWJQ_endnote-tag{
+		vertical-align:super;
+		font-size:80%;
+	}
+	p.LWJQ_endnote span.LWJQ_endnote-tag:before{content:'[';}
+	p.LWJQ_endnote span.LWJQ_endnote-tag:after{content:'] ';}
+
+	#LWJQ_endnotes{display:none;}
+
+	h2.LWJQ_endnoteheader{font-family:sans-serif;}
+
+	@media print{
+		span.LWJQ_endnotereference{display:inline;}
+		#LWJQ_endnotes{display:block;}
+	}
+
+	*/
+
+	$.fn.LWJQ_endnotes = function(options) {
+		var options = $.extend({},$.fn.LWJQ_endnotes.defaults, options);
+		var LWJQ_ENDNOTE = "<p class='LWJQ_endnote'><span class='LWJQ_endnote-tag'>{0}</span>{1}</p>";
+		var LWJQ_ENDNOTE_REF = "<span class='LWJQ_endnotereference'>{0}</span>";
+		var LWJQ_ENDNOTE_CSSNOTED = "noted";
+		$(options.target).html("");
+		var i = 1;
+		return this.each(function() {
+			/*check if link should be done (via callback), or if it's
+				been tagged with a CSS class meaning it's either been
+				done, or it was manually tagged to be skipped*/
+			var isOK = (options.onCheckLink.call(this));
+			if ($(this).hasClass(LWJQ_ENDNOTE_CSSNOTED))
+				isOK = false;
+			$(this).addClass(LWJQ_ENDNOTE_CSSNOTED);
+			if (isOK && $(this).attr('href')) {
+				$(this).after(str_sub(LWJQ_ENDNOTE_REF,[i]));
+				$(options.target).append(str_sub(LWJQ_ENDNOTE,[i,LWJQ_getFullLink($(this).attr('href'))]));
+				i++;
+			}
+			if (isOK && $(this).attr('cite')) {
+				if (this.tagName.toLowerCase()  === "blockquote") {
+					/* if a blockquote, find any q or a elements inside and footnote them.
+					This has to be done here to avoid the blockquote getting a previous
+					number than the inside q,a since the blockquote is found first.
+					Example:
+						<blockquote cite="abc">
+							<p>this is<a href="qed">link</a></p>
+						</blockquote>
+					the blockquote appears *first*, but we want the "a" to be
+					numbered first.
+					*/
+					$(this).find('q[cite],a[href]').each(function() {
+						var subisOK = (options.onCheckLink.call(this));
+						if ($(this).hasClass(LWJQ_ENDNOTE_CSSNOTED))
+							subisOK = false;
+						$(this).addClass(LWJQ_ENDNOTE_CSSNOTED);
+						if (subisOK) {
+							$(this).after(str_sub(LWJQ_ENDNOTE_REF,[i]));
+							var l = $(this).attr('href') ? $(this).attr('href') : $(this).attr('cite');
+							$(options.target).append(str_sub(LWJQ_ENDNOTE,[i,LWJQ_getFullLink(l)]));
+							i++;
+						}
+					});
+
+					/*now footnote blockquote itself since blockquote internals are done.
+						If we just use $(this).append(...) the citation appears on it's own
+						line *after* the close of the blockquote. We can't just use last-child
+						as the last-child element *may* not be a suitable element (p,li).
+						If we can't find a suitable element, put the link appended, which
+						likely puts the note on it's own line.*/
+					if ($(this).find("p:last-child").length == 1)
+						$(this).find("p:last-child").append(str_sub(LWJQ_ENDNOTE_REF,[i]));
+					else
+					if ($(this).find("ul:last-child").length == 1)
+						$(this).find("ul:last-child li:last-child").append(str_sub(LWJQ_ENDNOTE_REF,[i]));
+					else
+					if ($(this).find("ol:last-child").length == 1)
+						$(this).find("ol:last-child li:last-child").append(str_sub(LWJQ_ENDNOTE_REF,[i]));
+					else
+						$(this).append(str_sub(LWJQ_ENDNOTE_REF,[i]));
+				}
+				else {
+					//not a blockquote, just some other tag with a cite.
+					$(this).after(str_sub(LWJQ_ENDNOTE_REF,[i]));
+				}
+				//create the endnote for the cite
+				$(options.target).append(str_sub(LWJQ_ENDNOTE,[i,LWJQ_getFullLink($(this).attr('cite'))]));
+				i++;
+			} // end of cite block
+			if ($('#LWJQ_endnoteheader').length == 0)
+				$(options.target).prepend("<h2 id='LWJQ_endnoteheader'>" + options.title + "</h2>");
+		});
+	};
+
+	$.fn.LWJQ_endnotes.defaults = {
+		onCheckLink: function(){return true;},
+		target: "#LWJQ_endnotes",
+		title: "EndNotes"
+	};
+
+	/************************************************************
+	        Generic helper functions for LWJQ
+	*************************************************************/
+
+	/* string replace function.
+		Example str_sub("Hello {0}",["John"])
+		gives "Hello John"
+	*/
+	function str_sub(str, args){
+		var j = args.length;
+		for (var i = 0; i < j; i++)
+			str = str.replace(new RegExp("\\{" + i + "\\}", "g"),args[i]);
+		return str;
+	}
+
+	function LWJQ_parseQuery(qstring) {
+		var params = new Array();
+		if (!qstring)
+			return params;
+		var p = qstring.split(/&/);
+		for (var i in p) {
+			var j = p[i].split('=');
+			params[unescape(j[0])] = unescape(j[1]).replace(/\+/g, ' ');
+		}
+		return params;
+	}
+
+	function LWJQ_getFullLink(link) {
+		if ((link.substr(0,4) !== 'http') && (link.substr(0,3) !== 'ftp')) {
+			var t = (link.substr(0,1) === '/') ? "" : "/";
+			return document.location.protocol + "//" +
+					location.hostname + t + link;
+		}
+		else
+			return link;
+	}
+
+	function Position() {
+		this.x = 0;
+		this.y = 0;
+		this.width = 200;
+	}
+
+	//calc postion for popups
+	function calcposition(pos,req_x,req_y,req_width) {
+		pos.width = req_width;
+		var window_width = $(window).width();
+		//find which has more space, left or right side?
+		if (req_x > (window_width - req_x - req_width))
+			pos.x = req_x - pos.width - 10;
+		else
+			pos.x = req_x + 10;
+		//check if x-pos is off left side
+		if (pos.x < 0) {
+			pos.x = 3;
+		}
+		//check if x-pos is off right side and adjust window width.
+		if ((pos.x + pos.width) > window_width) {
+			pos.width = window_width - pos.x - 10;
+		}
+		if ((pos.width/req_width) < .70) {
+			debug('** Fixing small pos.width Requested: ' + req_width + '  Calculated: ' + pos.width);
+			pos.width = (req_width > (window_width - 30)) ? window_width * .90 : req_width;
+			pos.x = window_width * .04;
+			debug('** Fixed - pos.width now: ' + pos.width);
+		}
+
+		//set y-pos *below* element because if it's not, in the case
+		//    where the pop-up covers the link, some bizarre UI things
+		//    can happen in some browsers.
+		pos.y = req_y + 3;	
+	}
+
+	/*private debug function - if Firebug is in use */
+	function debug(msg){
+		if (window.console && window.console.log) {
+			window.console.log('LWJQ: '+msg);
+		}
+	}
+
+
+})(jQuery);

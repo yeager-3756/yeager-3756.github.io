@@ -1,0 +1,41 @@
+Sitemap: http://www.dyeager.org/sitemap.xml.gz
+
+User-agent: *
+Disallow: /cgi-bin/
+Disallow: /member-area
+Disallow: /wp-login.php
+Disallow: /2008/wp-login.php
+Disallow: /2009/wp-login.php
+Disallow: /2010/wp-login.php
+Disallow: /2011/wp-login.php
+Disallow: /2012/wp-login.php
+Disallow: /2013/wp-login.php
+Disallow: /2014/wp-login.php
+
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: dotbot
+Disallow: /
+
+User-agent: meanpathbot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: XoviBot
+Disallow: /
+
+User-agent: magpie-crawler
+Disallow: /
+
+User-agent: daumoa
+Disallow: /
+
+User-agent: SiteExplorer
+Disallow: /
+
+User-agent: Aboundexbot
+Disallow: / 

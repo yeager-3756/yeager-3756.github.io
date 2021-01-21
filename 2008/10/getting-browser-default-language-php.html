@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
+<head>
+<meta charset="utf-8">
+<title>Getting the Browser Default Language in PHP | Frames of Reference</title>
+<!-- DNS prefetch comment script domain -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/static/css/main.css">
+<script defer src="/static/js/main.js"></script>
+<link rel="icon" type="image/png" href='/apple-touch-icon-192x192.png'>
+<link rel="apple-touch-icon" href='/apple-touch-icon-180x180.png'>
+<link rel="apple-touch-icon" href='/apple-touch-icon-180x180.png' sizes='180x180'>
+<link rel="apple-touch-icon" href='/apple-touch-icon-167x167.png' sizes='167x167'>
+<link rel="apple-touch-icon" href='/apple-touch-icon-152x152.png' sizes='152x152'>
+<link rel="apple-touch-icon" href='/apple-touch-icon-120x120.png' sizes='120x120'>
+<meta name="description" content="If you do much international work, getting the users default language isn't as simple as it may appear. Using PHP and a few regular expressions you can quickly parse what the users browser says is its preferred language.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:creator" content="@darrinyeager">
+<meta name="twitter:site" content="@darrinyeager">
+<meta property="og:title" content="Getting the Browser Default Language in PHP">
+<meta property="og:url" content="https://www.dyeager.org/2008/10/getting-browser-default-language-php.html">
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="article:section" content="Other">
+<meta property="article:tag" content="Programming">
+<meta property="article:published_time" content="2008-10-18">
+<meta property="og:site_name" content="Frames of Reference">
+<meta property="og:description" content="If you do much international work, getting the users default language isn't as simple as it may appear. Using PHP and a few regular expressions you can quickly parse what the users browser says is its preferred language.">
+<meta property="og:image" content="https://www.dyeager.org/images/logo.svgz">
+<meta property="og:image:secure_url" content="https://www.dyeager.org/images/logo.svgz">
+<!-- Comments script -->
+
+<!-- article -->
+</head>
+
+<body>
+
+<div id='window-container'>
+
+<header id='window-header'>
+  <nav>
+    <ul class="window-header-menu">
+      <li class="window-header-menu-logo"><a href="/"><img src="/images/FramesOfReference-logo.svgz" alt="Frames of Reference" height="65" width="312"></a></li>
+      <li class="window-header-menu-item"><a href="/page/about.html">About</a></li>
+      <li class="window-header-menu-item"><a href="/page/newsletter.html">Newsletter</a></li>
+      <li class="window-header-menu-item"><a href="/page/store.html">Store</a></li>
+      <li class="window-header-menu-item"><a href="/search.html">Search</a></li>
+      <li id='window-hamburger-menu'><a id='window-hamburger-menu-a' href="#"><span class='qz'></span><span class='qz'></span><span class='qz'></span></a></li>
+    </ul>
+  </nav>
+</header>
+
+
+
+<!-- Body -->
+<main id="window-content">
+  
+  <!-- content inserted from template -->
+
+<!-- template: article.tt -->
+<article class="post post-full">
+  <header>
+    <h1>Getting the Browser Default Language in PHP</h1>
+      <!-- ><time class="entry-time" datetime="2008-10-18T14:41:00-07:00">Saturday October 18 2008</time> -->
+  </header>
+
+  <div class="entry-content">  
+  
+<p>If you’re doing international (i18n or Iñtërnâtiônàlizætiøn) work (or
+just want to make your site available in several languages), you’ll
+likely need to determine the users default language in your PHP code to
+determine which language to serve up. Searching the web yields one
+common code piece frequently; unfortunately as you’ll soon see it may
+not give you the results you need as it ignores parts of the HTTP spec
+which may or may not be critical to the accuracy of the results.</p>
+<h2>HTTP Language Headers</h2>
+<p>The interchange between browser and server transfers information about
+the client and its capabilities in headers — user agent, what it will
+accept, and (what we’re interested in) language. The browser sends
+language information in a header called <code>HTTP_ACCEPT_LANGUAGE</code>, which
+looks something like this:</p>
+<pre><code> es,en-us;q=0.3,de;q=0.1
+</code></pre>
+<p>Those values state the browser accepts Spanish (es), US English (en-us),
+and German (de). Obviously, most browsers don’t send so many
+possibilities, but you get the idea. Most of the code you can find to
+determine default language simply searches the header for the first
+2-letter language code and returns the first it finds. But looking at
+the example, you’ll note some additional information <code>q=0.3</code> — what’s
+that?</p>
+<h2>HTTP Header Q-Values for HTTP_ACCEPT_LANGUAGE</h2>
+<p>As part of the HTTP spec, those are Q-Values, and must be a number
+between 0 and 1 (if no number appears, you can assume the value as 1).
+Q-Values provide not only information to what a browser <em>supports</em>, but
+what it <em>prefers</em>. In the previous example, <code>es</code> has no q-value, so it’s
+1.0, while <code>en-us</code> is 0.3 and <code>de</code> is 0.1 so that means this client can
+handle Spanish, US English, or German — but <em>prefers</em> Spanish if it’s
+available. If it’s not, the server is free to send any of the other
+supported choices.</p>
+<p>Now you see the problem — if you only search the <code>HTTP_ACCEPT_LANGUAGE</code>
+header for a match and ignore the q-value, you have no way to determine
+what language the client <em>prefers</em> — you’ll only get a match for
+support. Or at worse, if a q-value is 0 (meaning no support at all),
+you’ll get a language the client specifically tells you <em>not</em> to send.
+Why simple reg-ex solutions work becomes obvious after examining some
+actual <code>HTTP_ACCEPT_LANGUAGE</code> headers sent by popular browsers:</p>
+<ul>
+<li><code>en-us,en;q=0.5</code> (Mozilla)</li>
+<li><code>en-US,en;q=0.9</code> (Opera)</li>
+<li><code>en-us</code> (Internet Explorer)</li>
+<li><code>en</code> (Lynx)</li>
+</ul>
+<p>In those cases a simple string match works, even if q-values are
+ignored. But if the actual <code>HTTP_ACCEPT_LANGUAGE</code> HTTP header contains
+multiple languages with differing q-values like <code>&quot;en,de;q=0.9&quot;</code> (a
+person whose primary language is English, but knows German) simple
+string searches fail spectacularly. Obviously, we must consider q-values
+if our results are to be correct.</p>
+<h2>Algorithm</h2>
+<p>The solution is simple. Break apart the string into it’s language
+components (they’re separated by commas), and then pick the one with the
+highest q-value to use (assume any language lacking q-values have a
+value of 1.0). In our example, we’ll split the string and get the
+following array back:</p>
+<ul>
+<li><code>es</code> — Spanish, assume q-value = 1.0</li>
+<li><code>en-us;q=0.3</code> — US English, with q-value of 0.3</li>
+<li><code>de;q=0.1</code> — German, with q-value of 0.1</li>
+</ul>
+<p>Now with the languages identified,use regular expressions to extract the
+q-value, if it exists. Once all the q-values are assigned, select the
+one with the highest q-value, if it exists. If multiple languages have
+the same q-value, it’s safe to use any of them equally.</p>
+<h2>The Code</h2>
+<p>The following is
+<a href="https://www.dyeager.org/downloads/license-bsd.txt">BSD-Licensed</a> PHP
+code.</p>
+<pre class="code notranslate">
+#########################################################
+# Copyright © 2008 Darrin Yeager                        #
+# https://www.dyeager.org/                               #
+# Licensed under BSD license.                           #
+#   https://www.dyeager.org/downloads/license-bsd.txt    #
+#########################################################
+
+function getDefaultLanguage() {
+   if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]))
+      return parseDefaultLanguage($_SERVER["HTTP_ACCEPT_LANGUAGE"]);
+   else
+      return parseDefaultLanguage(NULL);
+   }
+
+function parseDefaultLanguage($http_accept, $deflang = "en") {
+   if(isset($http_accept) && strlen($http_accept) > 1)  {
+      # Split possible languages into array
+      $x = explode(",",$http_accept);
+      foreach ($x as $val) {
+         #check for q-value and create associative array. No q-value means 1 by rule
+         if(preg_match("/(.*);q=([0-1]{0,1}.\d{0,4})/i",$val,$matches))
+            $lang[$matches[1]] = (float)$matches[2];
+         else
+            $lang[$val] = 1.0;
+      }
+
+      #return default language (highest q-value)
+      $qval = 0.0;
+      foreach ($lang as $key => $value) {
+         if ($value > $qval) {
+            $qval = (float)$value;
+            $deflang = $key;
+         }
+      }
+   }
+   return strtolower($deflang);
+}
+</pre>
+<p>Then in your code, just call <code>getDefaultLanguage()</code> and you’ll get a
+string back with the highest q-value language sent by the browser in the
+<code>HTTP_ACCEPT_LANGUAGE</code> header.</p>
+<h2>Caveats</h2>
+<p>First, <em>be sure</em> to use UTF-8 as your character encoding. If you’re not
+using UTF-8 right now, convert all your documents to it — you’ll be glad
+you did later.</p>
+<p>Second, if you’re sending different language-specific content at the
+same URL, be sure to send the appropriate Vary header. If you don’t,
+intermediate proxy caches might be confused and serve the wrong language
+to some people. To do that, just use the following first in your PHP
+code: <code>header(&quot;Vary: Accept-Language&quot;)</code>. But be warned Internet Explorer
+has some bugs with the Vary header you should be aware of.</p>
+<p>For more on q-values, IE bugs, and more explanation on the regular
+expressions and headers in general, read our previous article <a href="https://www.dyeager.org/2009/01/php-xhtml-mime-type-caching.html">Serving XHTML With the Correct MIMETYPE</a>
+for discussions of similar issues. You <em>are</em> serving your XHTML
+correctly as <code>application/xhtml+xml</code> aren’t you?</p>
+<h2>So what?</h2>
+<p>What’s this good for? In a future article, we’ll demonstrate how to use
+this method to get instant translations of your web pages into many
+different languages — automatically.</p>
+<h2>References</h2>
+<ul>
+<li><a href="https://www.dyeager.org/2009/01/php-xhtml-mime-type-caching.html">Serving XHTML With Correct MIMETYPE</a>
+(More on q-values)</li>
+<li><a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4">HTTP 1.1 Specification</a>
+(Section 14.4 Accept-Language header)</li>
+<li><a href="http://www.w3.org/International/articles/language-tags/">Language Tags in HTML and XHTML (w3c)</a></li>
+<li><a href="http://www.rfc-editor.org/rfc/rfc4646.txt">RFC 4646</a></li>
+<li><a href="http://www.iana.org/assignments/language-subtag-registry">List of Language Tags</a></li>
+</ul>
+<p><strong>UPDATE July 2012:</strong> Some discussion in the comments over <a href="http://www.codinghorror.com/blog/2007/04/pick-a-license-any-license.html">software licensing</a>.
+I’m not a lawyer, but some say public domain isn’t valid everywhere,
+others have a specific favorite license (the GPL vs BSD debate). I don’t
+want to engage in any of those debates, so to be simple and clear on
+this, use any of the following:</p>
+<ul>
+<li>BSD (3-clause)</li>
+<li>GNU GPL V2</li>
+<li>GNU GPL V3</li>
+<li>GNU Affero GPL V3</li>
+<li>MIT/X11</li>
+</ul>
+<p><strong>UPDATE November 2012</strong> — Nope, that didn’t clear it up. I’m <em>stunned</em>
+by the hate-mail I’ve received over this piece. I (like many
+programmers) write code to fix problems <em>I</em> face, and think, hey, if
+I’ve faced this problem, maybe others have too, so why not post it and
+help others avoid re-inventing the wheel?</p>
+<p>I’ve done this before with my <a href="https://www.dyeager.org/2008/06/markdown-color-syntax-highlighting-kate.html">Kate and Markdown syntax highlighting filter</a>,
+and the KDE project picked that up so everyone could benefit.</p>
+<p>Sadly, in the future I think I’ll refrain from helping other people by
+posting code. I don’t even write much PHP code anymore, but leave the
+page here to help others who do.</p>
+<p>But as usual, a few ass-hats ruin it for everyone else.</p>
+<p>It appears many people are confused over copyright and how it works. I’m
+no lawyer, but consider what Jeff Atwood says in <a href="http://www.codinghorror.com/blog/2007/04/pick-a-license-any-license.html">pick a license, any license</a>
+as he considers what posting code without any license means:</p>
+<blockquote>
+<p>Because I did not explicitly indicate a license, I declared an
+implicit copyright without explaining how others could use my code.
+Since the code is unlicensed, I could theoretically assert copyright
+at any time and demand that people stop using my code. Experienced
+developers won’t touch unlicensed code because <em>they have no legal
+right to use it</em>. That’s ironic, considering the whole reason I posted
+the code in the first place was so other developers could benefit from
+that code. I could have easily avoided this unfortunate situation if I
+had done the right thing and <strong>included a software license with my
+code</strong>.</p>
+</blockquote>
+<p><a href="http://www.codinghorror.com/blog/2004/02/about-me.html">Jeff founded stackoverflow.com</a>,
+so even if you don’t know who he is you’ve probably used something he
+developed.</p>
+<p>Why the hate-mail? If you don’t like the code, or think it’s crap, don’t
+use it. It worked for me, if it doesn’t for you, write something better.</p>
+<p>This page has become quite popular, so it’s obviously a problem facing
+PHP programmers. I’m glad I could help those people.</p>
+<p>I just don’t think I’ll do it again — if this page suddenly goes 410,
+you’ll know why.</p>
+<pre class="code notranslate">
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+The PHP code on the web page:
+dyeager.org/blog/2008/10/getting-browser-default-language-php.html
+Titled "Getting the Browser Default Language in PHP"
+can be used under any of the following licenses:
+
+BSD (3-clause)
+GNU GPL V2
+GNU GPL V3
+GNU Affero GPL V3
+MIT/X11
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.14 (GNU/Linux)
+
+iQIcBAEBCAAGBQJQFYlhAAoJEBa2wjrT9ZFs5xEP/0qSc/QHu5EVf+4DqOzT9MZP
+xwWp3c2JsEogD2HGw0CRxjLyE3ljSE8sHWUwX8G55l5Xm+8ZMKcrZxOj1ikNv6zt
+LMLkcF1ggTWTVYw/pdY/kAlJkbYWvmCar6ELxuAPXysC7zTMmlzPOJsn23v/ZVpK
+xJsFB1J3s0Q2GzFj0rhXVljz7JXQX57AdZSuPY0U+N+yKxEOrmgFm2QoKdCQs5nV
+nqmMPPsePMQqxkWfhoQ9dlrkF5KeW/yvA/9pMFgN6++eCval0pPuE+mJeuKmVWBO
+8pNaTP0N4z+MOyn/Pbg2oJZ8yCUtCLWD3KvbE1ngDzTbJpRtRJfZ/CbOhmeW2+Rq
+ibb/VzGElef0UO4tJD2XTirOFZiXkipuFIFEXEDU+6iVpdzFWtfpJxdd3uJrwL3N
+7J55G0xwkMfZhqkPvbEl1jerwfK4VyS57MCUkNQswF3qWYhLcE+TxRhwdM5e0k4F
+4BMYzLuER7izbVw0/qLm5qw6WEWYMgOutueR/wQq02jCftZilSQJXJkrKPIKcZFC
+ev+sL811AoPOl3nD5vqCxAUO114LyHMdqcvYgC45NLnevu/kmU2r+8f3f1/2CQYl
+PHzEKxiiJz8DbV6sBirWVInjmRgkeuZgsbxV18XGQIC+vs6t6Vi3CX7dKZX7dQz6
+sQTzzOuJ13qLf2kNAWF+
+=MD+Z
+-----END PGP SIGNATURE-----
+</pre>
+
+
+
+  </div>  <!-- article.tt  div.entry-content -->
+  
+  <footer>
+    <p><span class="entry-categories">Filed Under: <a href="/categories/other.html" rel="category tag">Other</a></span></p>    
+    <p><span class="entry-tags">Tagged: <a href="/tags/programming.html">Programming</a></span></p>
+    <div id="LWJQ_endnotes"></div>
+  </footer>
+  
+    
+  <section id="text-2">
+    <div class="well text-center" id="call-to-action">
+      <p><b><i>A dog, a horse, and Superman walk into a bar…</i></b> Not a joke, it’s a special article I wrote titled “Animal Magnetism,” ONLY available to subscribers. Gosh, it’s free too! GET IT TODAY by entering your primary email address below. Quit anytime, it’s risk-free!</p>
+      <div>
+         <form action="https://dyeager.us2.list-manage.com/subscribe/post?u=c978d90034b777a842776fba5&amp;id=ae556d0732" method="post" id="mc-embedded-subscribe-form2" name="mc-embedded-subscribe-form" class="validate" target="_blank">
+         <p class="call-form">
+         <input type="email" size="22" value="E-Mail Address" name="EMAIL" class="form-text" id="mce-EMAIL2" onfocus="if ( this.value == 'E-Mail Address') { this.value = ''; }" onblur="if ( this.value == '' ) { this.value = 'E-Mail Address'; }">
+         <input type="submit" value="Send me stuff!" name="subscribe" id="mc-embedded-subscribe2" class="btn btn-success btn-lg">
+         </p>
+        </form>
+     </div>
+   </div> <!-- #call-to-action -->
+  </section>
+  
+</article>
+
+
+  <div class="visible-print">
+    <p>Copyright <span style="font-size:120%;">©</span>Frames of Reference LLC 1998–2021</p>
+    <p><code>https://www.dyeager.org/2008/10/getting-browser-default-language-php.html</code></p>
+  </div>
+
+</main>
+
+
+
+<aside id='window-aside-1'>
+  <h2>Books</h2>
+  <p>Books are available at <a href='https://www.amazon.com/s?rh=p_30%3AFrames+of+Reference+LLC'>amazon.com</a>, <a href='https://www.barnesandnoble.com/b/?Ntt=Frames+of+Reference+LLC&Ntk=Publisher
+'>Barnes &amp; Noble</a>, or wherever books are sold.</p>
+  
+  <div id='book-listing-container'>
+  
+  <article class="book-listing">
+    <header>
+      <h1><a href="https://www.amazon.com/Stay-In-The-Game-Still-Dont-Get-Pony-Darrin-Yeager/dp/098311174X/">Stay in the Game</a></h1>
+    </header>
+    <p class='book-img'><img class="bookcover" src="/images/book/book-cover-stayingame-9780983111740.jpg" width="80" height="120" alt="Stay in the Game Cover"></p>
+    <p class='book-description'> A terrible disease infects many Christians by believing life is easy and God grants everyone (with enough faith, that is) a Lexus, ice cream, and a pony. When life gets tough people hide the pain and frustration created by the paradox of what they think the Christian life should be—versus the reality they experience—by transforming into Tony the Tiger, where everything is grrrrreat! Yet everyone needs help sometimes.</p>
+  </article>
+
+  <article class="book-listing">
+  <header>
+    <h1>
+      <a href="https://www.amazon.com/Get-Back-In-The-Game-Darrin-Yeager/dp/0983111731/">Get Back In The Game!</a>
+    </h1>
+  </header>
+  <p class='book-img'><img class="bookcover" src="/images/book/book-cover-getbackingame-9780983111733.jpg" width="80" height="120" alt="Get Back in the Game Cover"></p>
+  <p class='book-description'>When trials arrive, it’s a myth you’ll rise to the occasion, rather you’ll sink to your level of preparation. If you’re bringing (metaphorically) a knife to a gun-fight, you’ve set yourself up as a pig going to slaughter. Zechariah and Haggai appear about the same time to encourage the people to rejoin the battle, providing practical advice you can use today. It’s time to transform from a 98-pound spiritual weakling to a seasoned combat-ready Christian, because Christianity is — and always will be — a full-contact experience (whether you know it or not).</p>
+  </article>
+  
+  <article class="book-listing">
+  <header>
+    <h1>
+      <a href="https://www.amazon.com/Daniel-Darrin-Yeager/dp/0983111715/">The Book Of Daniel</a>
+    </h1>
+  </header>
+   <p class='book-img'><img class="bookcover" src="/images/book/book-cover-daniel-9780983111719.jpg" width="80" height="120" alt="Daniel Cover"></p>
+   <p class='book-description'>Daniel’s book contains more than mystical prophecy and Sunday School flannel-board stories, as Paul reminds us “whatsoever things were written in earlier times were written for our learning, that we, through patience and comfort of the scriptures, might have hope”. Daniel’s character was unwavering, as he decided early in his life to maintain his devotion to God, no matter the cost. That’s the real lesson to learn, and Daniel’s book provides the blueprint.</p>
+  </article>
+  
+
+  <article class="book-listing">
+  <header>
+    <h1>
+      <a href="https://www.amazon.com/Troubled-Church-Darrin-Yeager/dp/0983111707/">The Troubled Church</a>
+    </h1>
+  </header>
+    <p class='book-img'><img class="bookcover" src="/images/book/book-cover-troubledchurch-9780983111702.jpg" width="80" height="120" alt="The Troubled Church Cover"></p>
+    <p class='book-description'>The Corinthians had their share of problems, among them marriage and divorce, divisions, pride, legalism, spiritual gifts, immorality, and more. Unfortunately the church hasn’t learned from Paul’s letter as the same mistakes repeat over and over … and over. Have you thought about how people outside the church see it today? Their responses reveal much about the state of today’s church — and it’s not good — as the problems at Corinth continue today.</p>
+  </article>
+  
+  </div> <!-- #book-listing-container -->
+  
+</aside> <!-- #window-aside-1 -->
+
+  
+
+
+<aside id='window-aside-2'>
+
+  <!-- call to action -->
+  <section>
+    <div class="well text-center">
+      <h2>Free Book Chapter</h2>
+      <p>Enter your email address to get a <b>FREE</b> chapter from my book “Stay in the Game, but you still don’t get a pony,” and a special bonus article — “Animal Magnetism.”</p>
+      <form id="subscribe" action="https://dyeager.us2.list-manage.com/subscribe/post?u=c978d90034b777a842776fba5&amp;id=ae556d0732" method="post" target="_blank" onsubmit="if ( subbox1.value == 'First Name') { subbox1.value = ''; } if ( subbox2.value == 'Last Name') { subbox2.value = ''; }" name="Free Book Chapter">
+         <input type="email" value="E-Mail Address" id="subbox" onfocus="if ( this.value == 'E-Mail Address') { this.value = ''; }" onblur="if ( this.value == '' ) { this.value = 'E-Mail Address'; }" name="EMAIL" required="required">
+         <input type="submit" value="Sign Up Now!" id="subbutton" class="btn btn-success">
+      </form>
+    </div>
+  </section>
+          
+          
+  <!-- Latest Posts -->
+  <section>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+         <h4>Recent Articles</h4>
+      </div>
+      <ul class="list-group" id="recent-posts-ul">
+        <li>Loading... (javascript required)</li>
+      </ul>
+   </div>
+  </section>
+
+
+  <!-- Series -->
+  <section>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+         <h4>Series</h4>
+      </div>
+      <ul class="list-group" id="series-list">
+        <li>Loading... (javascript required)</li>
+      </ul>
+    </div>
+  </section>
+
+
+  <!-- Categories -->
+  <section>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+         <h4>Categories</h4>
+      </div>
+      <ul class="list-group" id="categories-sidebar">
+        <li>Loading... (javascript required)</li>
+      </ul>
+    </div>
+  </section>
+
+        
+</aside> <!-- #window-aside-2 -->
+
+
+
+<footer id='window-footer'>
+  <div id='window-footer-container'>
+      
+    <section class='window-footer-section' id='window-footer-1'>
+      <h4>Recent Posts</h4>
+        <ul id="recent-posts-footer">
+          <li>Loading... (javascript required)</li>
+        </ul>
+    </section>
+      
+      
+    <section class='window-footer-section' id='window-footer-2'>
+      <h4>Popular Articles</h4>
+      <ul>
+       <li><a href="/2008/01/can-you-lose-your-salvation.html">Can You Lose Your Salvation?</a></li>
+       <li><a href="/2009/01/which-bible-translation-best.html">Which Bible Translation is Best?</a></li>
+       <li><a href="/2011/08/bible-review-hcsb.html">HCSB Bible Review</a></li>
+       <li><a href="/2008/04/probability-evolution.html">Evolution Probability</a></li>
+       <li><a href="/2011/09/matrix-guide-christianity.html">The Matrix Guide to Christianity</a></li>
+      </ul>     
+    </section>
+      
+      
+    <section class='window-footer-section' id='window-footer-3'>
+      <p>Have a question? Contact <span class="code">@darrinyeager</span> on Twitter, send <a href="mailto:webmaster@dyeager.org?subject=Web%20Site%20Feedback"><span class="code">webmaster @ dyeager.org</span></a> a message, or leave a comment on an article. We want to hear from you, so don’t keep silent.</p>
+      <p>Don’t forget to sign-up for our <a href="/page/newsletter.html">newsletter</a> so you won’t miss any new articles.</p>
+      <p><a href="/archives.html">Sitemap</a> • <a href="/rss/podcast.xml">Podcast</a> • <a href="/page/privacy-policy.html">Privacy&nbsp;Policy</a></p>      
+    </section>
+      
+  </div>  <!-- #window-footer-container -->
+    
+  <div id='window-footer-4'>
+    <img class="logo" src="https://www.dyeager.org/images/logo.svgz" alt="logo" height="65" width="65">
+      <p class="copyright">
+        Copyright <span style="font-size:120%;">©</span>Frames of Reference LLC 1998–2021
+      </p>
+  </div>
+    
+</footer>
+  
+</div> <!-- #window-container flex-containter -->
+
+</body>
+</html>
+

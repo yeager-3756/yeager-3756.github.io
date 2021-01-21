@@ -1,0 +1,196 @@
+Title:      LWJQ  
+Author:     Darrin Yeager  
+Date:       August 2009  
+Copyright:  2009 Darrin Yeager  
+Revision:   1.0.3  
+
+# Lightweight JQuery UI Effects #
+
+If you're using [JQuery][j], you're likely concerned about the size and amount of data in your pages. With the [average web page][8] now over 300k (and 50 objects), if you can come in under the average your site appears more responsive than average (many people are still on dial-up as broadband isn't frequently available outside densly populated areas). A good goal might be half the average, or 150k per page. JQuery itself only adds about 20k, but if you want to use some UI effects, [JQuery's UI][0] can add 100k to your pages, making it impractical for use if good response time is a goal.
+
+Most pages need tabs, accordions, pullquotes, endnotes, and pop-ups, without adding huge amounts of required bandwidth. Our LWJQ tools tip the scale at only 7k; while not as full-featured as JQuery UI, they save a lot of bandwidth.
+
+Goals:
+
+1. Lightweight --- enhance with common effects without adding much weight.
+2. [Unobtrusive JavaScript][5] (or graceful degradation if javascript isn't enabled). For users without javascript enabled or using text browsers like [lynx][7] or [links][6] full content must be available and look acceptable.
+
+## Accordion ##
+
+Accordion's are basic UI interfaces.
+
+### Code ###
+
+    <div id="accordion-div">
+      <h3>Section 1</h3>
+        <div>Content</div>
+      <h3>Section 2</h3>
+        <div>Content</div>
+    </div>
+
+And the JQuery code is:
+
+`$('#accordion-div').LWJQ_accordion();`
+
+That's it. Of course, a few options exist to change how it works. Like most of JQuery, LWJQ passes parameters as a generic Objects like `$('#accordion-div').LWJQ_accordion({header:'h4',trigger:'hover'});`.
+
+### Options ###
+
+* `mode` --- Either one tab open (closes any others which may be open), or multiple tabs to be open with each opened and closed on its own. **Default: `onetabopen`**.
+* `trigger` --- How the accordion opens and closes. Either `click` or `hover`. **Default: `click`**
+* `header` --- Header level for the content divisions. **Default: `h3`**
+
+## Endnotes ##
+
+If your document contains links, printing loses the link destination. You *can* use some CSS to extract the links and print them directly after the link, like this:
+
+    a:after{content:" ["attr(href)"] ";}
+
+But if your document contains many links, the result becomes difficult to read using a pure CSS solution.
+
+LWJQ can extract the links and place them at the end of the page, all numbered automatically. As a bonus, you can use *both* methods, as LWJQ (after it creates the endnote), adds a `noted` CSS class to the link. With that you can use CSS to avoid printing the links if the javascript runs --- enabling graceful degradation for users without javascript.
+
+    a:after{content:" ["attr(href)"] ";}
+    blockquote[cite]:after{content:" [" attr(cite) "] ";}
+    q[cite]:after{content:" [" attr(cite) "] ";}
+
+    a.noted:after{content:"" !important;}
+    blockquote.noted[cite]:after{content:"" !important;}
+    q.noted[cite]:after{content:"" !important;}
+
+The first rules create text nodes directly after the blockquote and links via CSS with no javascript, while the second rules *only* apply if the LWJQ script has run. Thus, if css is enabled but javascript is disabled, the user still sees links, only inline with the text and not as endnotes --- not as good as endnotes, but at least no information is lost.
+
+### Code ###
+
+The HTML needs a `div` so LWJQ knows where to add the notes:
+
+    <div id="LWJQ_endnotes"></div>
+
+And the JQuery code is thus:
+
+    $('a,blockquote,q').LWJQ_endnotes();
+
+All `a` links, `blockquote` and `q` tags containing a `cite` attribute will be endnoted. But what if you don't want some links to show in the endnotes --- like a link back to your home page? LWJQ contains a callback parameter which passes you the link --- return `true` or `false` from the callback to accept or reject it.
+
+    $("q,a,blockquote").LWJQ_endnotes({
+      onCheckLink:function(){
+        var h=$(this).attr('href');
+        if(h === '/link-to-ignore.html')
+          return false;
+        else
+          return true;
+      }
+    });
+
+Some CSS should go along with the endnotes, see the [LWJQ Demo][1] for more information as both the endnote number injected into the text, as well as the endnotes themselves are tagged with CSS classes for styling.
+
+### Options ###
+
+* `onCheckLink` --- Callback function to accept or reject each endnote before it's created. **Default: `function(){return true;}`**
+* `target` --- HTML `div` id holding the notes. This *must* exist in the HTML; LWJQ will **not** create it as it has no way of determining proper placement in the page. **Default: `#LWJQ_endnotes`**
+* `title` --- Title of EndNote header. **Default: `EndNotes`**
+
+## PullQuotes ##
+
+Pullquotes help highlight specific information. Usually floated to one side or the other with a larger type and/or border, they help the reader quickly identify major points.
+
+### Code ###
+
+HTML:
+
+    <p>Need to <span class="pullquote">create pullquotes?</span></p>
+
+And the JQuery:
+
+    $('span.pullquote').LWJQ_pullquote();
+
+LWJQ creates a `blockquote` and inserts it *just before* the current element (usually a paragraph, or `p`). If you try it with other elements you may get strange effects, so be warned. The injected HTML looks like this:
+
+    <blockquote class="pullquote"><p>text</p></blockquote>
+
+Of course, you'll need to add appropriate CSS for the effect to work.
+
+    blockquote.pullquote{float:right;border:2px solid #A33;}
+
+### Options ###
+
+* `className` --- Created `blockquote` element CSS class. **Default: `pullquote`**
+
+## Tabs ##
+
+Tabs are a common UI interface on the web, and not difficult to achieve.
+
+### Code ###
+
+HTML:
+
+    <div id="LWJQ_tabs">
+      <ul id="LWJQ_tabnav">
+        <li><a href="#tabs-1">Tab 1 Title</a></li>
+        <li><a href="#tabs-2">Tab Two Title</a></li>
+        <li><a href="#tabs-3">Tab Three Title</a></li>
+      </ul>
+
+      <div id="tabs-1">Tab Content</div>
+      <div id="tabs-2">Tab Content</div>
+      <div id="tabs-3">Tab Content</div>
+    </div>
+
+JQuery:
+
+`$('#LWJQ_tabs').LWJQ_tabs();`
+
+You'll need some CSS to go along with it, see the [LWJQ Demo][1] for more information.
+
+### Options ###
+
+* `liHoverClassName` --- `li` tab hover class. **Default: `hover`**
+* `tabActiveClassName` --- Active Tabs CSS class. **Default: `tab-active`**
+* `tabInactiveClassName` --- Inactive Tabs CSS class. **Default: `tab-inactive`**
+
+## Pop-Ups ##
+
+LWJQ gives you several options for popups.
+
+1. `$().LWJQ_tip()` Attach directly to links. When the link is hovered, it pops-up whatever is linked to, disabling the default click action.
+2. `$.LWJQ_popupText()` Create a pop-up with any text.
+3. `$.LWJQ_popupAJAX()` Create a pop-up from a URL.
+
+### Code ###
+
+`$().LWJQ_tip()` attaches to any link, and pops-up the URL linked to at the current cursor position.
+
+`$.LWJQ_popupAJAX()` Options: `x,y,width,title,url,defaultCSS`. `x,y` are the coordinates of the popup. `width` is width in pixels. `title` and `url` are self-explanatory. Since the CSS involved isn't trivial, setting `defaultCSS` to `true` uses some sane defaults if you don't want to define it yourself. URL is required, others are optional.
+
+`$.LWJQ_popupText()` Options: `x,y,width,title,text,defaultCSS`. All optional, although if you don't pass in `text`, what's the point of the pop-up?
+
+### Options ###
+
+* `tip_width` --- Width of pop-up, in pixels. **Default: `550`**
+* `defaultCSS` --- Enable the built-in LWJQ CSS. **Default: `false`**
+
+## Demo Page ##
+
+It's much easier to see with the [demo][1], so give it a try!
+
+## Downloads ##
+
+LWJQ is licensed under a [BSD license][9].
+
+* [LWJQ 1.0.3 Minified][2] (for production, 7k)
+* [LWJQ 1.0.3][3] (Full code with comments, 20k)
+* [LWJQ Documentation][4] (This page as text)
+
+<div id="LWJQ_endnotes"></div>
+
+[j]: http://jquery.com/
+[0]: http://jqueryui.com/
+[1]: http://www.dyeager.org/demo/LWJQ-demo.html
+[2]: http://www.dyeager.org/downloads/jquery-LWJQ-1.0.3-min.js.txt
+[3]: http://www.dyeager.org/downloads/jquery-LWJQ-1.0.3.js.txt
+[4]: http://www.dyeager.org/downloads/LWJQ.txt
+[5]: http://en.wikipedia.org/wiki/Unobtrusive_JavaScript
+[6]: http://links.sourceforge.net/
+[7]: http://lynx.isc.org/
+[8]: http://www.websiteoptimization.com/speed/tweak/average-web-page/
+[9]: http://www.dyeager.org/downloads/license-bsd.php
