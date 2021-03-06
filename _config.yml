@@ -2,8 +2,8 @@ url: https://www.dyeager.org
 markdown: kramdown
 permalink: /post/:slug:output_ext
 plugins:
-  - jekyll-recirect-from
-  
+  - jekyll-redirect-from
+
 defaults:
   -
     scope:
