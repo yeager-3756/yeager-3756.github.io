@@ -1,0 +1,79 @@
+﻿@font-face{
+  font-family:'Lora';
+  font-style:normal;
+  font-weight:400;
+  src:local('Lora-Regular'),
+    url(/static/fonts/Lora-Regular.woff2) format('woff2'),
+    url(/static/fonts/Lora-Regular.woff) format('woff');
+  font-display:swap;
+}
+
+@font-face{
+  font-family:'Lora';
+  font-style:normal;
+  font-weight:700;
+  src:local('Lora-Bold'),
+    url(/static/fonts/Lora-Bold.woff2) format('woff2'),
+    url(/static/fonts/Lora-Bold.woff) format('woff');
+  font-display:swap;
+}
+
+@font-face{
+  font-family:'Lora';
+  font-style:italic;
+  font-weight:400;
+  src:local('Lora-Italic'),
+    url(/static/fonts/Lora-Italic.woff2) format('woff2'),
+    url(/static/fonts/Lora-Italic.woff) format('woff');
+  font-display:swap;
+}
+
+@font-face{
+  font-family:'Lora';
+  font-style:italic;
+  font-weight:700;
+  src:local('Lora-BoldItalic'),
+    url(/static/fonts/Lora-BoldItalic.woff2) format('woff2'),
+    url(/static/fonts/Lora-BoldItalic.woff) format('woff');
+  font-display:swap;
+}
+  
+@font-face{
+  font-family:'Cabin';
+  font-style:normal;
+  font-weight:400;
+  src:local('Cabin-Regular'),
+    url(/static/fonts/Cabin-Regular.woff2) format('woff2'),
+    url(/static/fonts/Cabin-Regular.woff) format('woff');
+  font-display:swap;
+}
+  
+@font-face{
+  font-family:'Cabin';
+  font-style:normal;
+  font-weight:700;
+  src:local('Cabin-Bold'),
+    url(/static/fonts/Cabin-Bold.woff2) format('woff2'),
+    url(/static/fonts/Cabin-Bold.woff) format('woff');
+  font-display:swap;
+}
+  
+@font-face{
+  font-family:'Cabin';
+  font-style:italic;
+  font-weight:400;
+  src:local('Cabin-Italic'),
+    url(/static/fonts/Cabin-Italic.woff2) format('woff2'),
+    url(/static/fonts/Cabin-Italic.woff) format('woff');
+  font-display:swap;
+}
+
+@font-face{
+  font-family:'Cabin';
+  font-style:italic;
+  font-weight:700;
+  src:local('Cabin-BoldItalic'),
+    url(/static/fonts/Cabin-BoldItalic.woff2) format('woff2'),
+    url(/static/fonts/Cabin-BoldItalic.woff) format('woff');
+  font-display:swap;
+}

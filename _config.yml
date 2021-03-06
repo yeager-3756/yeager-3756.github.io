@@ -1,0 +1,19 @@
+url: https://www.dyeager.org
+markdown: kramdown
+permalink: /post/:slug:output_ext
+plugins:
+  - jekyll-recirect-from
+  
+defaults:
+  -
+    scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"

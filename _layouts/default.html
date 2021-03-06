@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#">
+<head>
+<meta charset="utf-8">
+<title>{{ page.title | smartify }} — Frames of Reference</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/static/css/main.css">
+<link rel="icon" type="image/png" href='/apple-touch-icon-192x192.png'>
+<link rel="apple-touch-icon" href='/apple-touch-icon-180x180.png'>
+<link rel="apple-touch-icon" href='/apple-touch-icon-180x180.png' sizes='180x180'>
+<link rel="apple-touch-icon" href='/apple-touch-icon-167x167.png' sizes='167x167'>
+<link rel="apple-touch-icon" href='/apple-touch-icon-152x152.png' sizes='152x152'>
+<link rel="apple-touch-icon" href='/apple-touch-icon-120x120.png' sizes='120x120'>
+<meta name="description" content="{{ page.summary | smartify }}">
+<meta property="og:title" content="{{ page.title | smartify }}">
+<meta property="og:url" content="{{ site.url }}{{ page.url }}">
+<meta property="og:locale" content="en_US">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="[% global.title.dquote %]">
+<meta property="og:description" content="{{ page.summary | smartify }}">
+<meta property="og:image" content="{{ site.url }}/images/logo.svg">
+<meta property="og:image:secure_url" content="{{ site.url }}/images/logo.svg">
+
+<script>
+window.$   = function (selector) { return document.querySelector(selector);    };
+window.$$  = function (selector) { return document.querySelectorAll(selector); };
+window.$$$ = function (selector) { return document.getElementById(selector);   };
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', DOMReady);
+} else { 
+  DOMReady();
+}
+ 
+function DOMReady() {  
+  
+  var title = document.title.substr(0,document.title.indexOf("| Frames of") - 1) || document.title;
+  
+  $$$('window-hamburger-menu').addEventListener('click', (e) => { 
+    $$('#window-header .window-header-menu-item').forEach( (el) => {
+      el.classList.toggle('active');
+      if (el.classList.contains('active')) {
+        $('#window-hamburger-menu').innerHTML = '<a id="window-hamburger-menu-a" href="#">X</a>';
+      }
+      else {
+        $('#window-hamburger-menu').innerHTML = "<a id='window-hamburger-menu-a' href='#'><span class='qz'></span><span class='qz'></span><span class='qz'></span></a>";
+      }
+    });
+    e.preventDefault();
+    e.stopPropagation();   
+  });
+  
+} /* DomReady */
+  
+</script>
+
+</head>
+
+<body>
+
+<div id='window-container'>
+
+<header id='window-header'>
+  <nav>
+    <ul class="window-header-menu">
+      <li class="window-header-menu-logo"><a href="/"><img src="/images/FramesOfReference-logo.svg" alt="Frames of Reference Home" height="65" width="312"></a></li>
+      <li class="window-header-menu-item"><a href="/page/about.html">About</a></li>
+      <li class="window-header-menu-item"><a href="/archives.html">Archives</a></li>
+      <li class="window-header-menu-item"><a href="/page/search.html">Search</a></li>
+      <li id='window-hamburger-menu'><a id='window-hamburger-menu-a' href="#"><span class='qz'></span><span class='qz'></span><span class='qz'></span></a></li>
+    </ul>
+  </nav>
+</header>
+
+
+<!-- Body -->
+<main id="window-content">
+  
+  
+  <!-- content inserted from template into default.html -->
+  {{ content }}
+  <!-- END content inserted from template into default.html -->
+
+
+  <div class="visible-print">
+    <p>Copyright <span style="font-size:120%;">©</span>Frames of Reference LLC 1998–{{ "now" | date: "%Y" }}</p>
+    <p><code>{{ site.url }}{{ page.url }}</code></p>
+  </div>
+
+</main>
+
+
+<aside id='window-aside-1' class='window-aside'>
+  
+  <div id='book-listing-container'>
+  
+
+  <!-- Logic 101, Armor of God, Nature of God, Atheism and Agnost -->
+  <article class="book-listing">
+{%- assign sec_title = 'The Nature of God' -%}
+{%- assign postsx = site.posts | where: "seriesname",sec_title | sort:"seriesorder" -%}
+  <section>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+         <h4>{{ sec_title }}</h4>
+      </div>
+      <ul class="list-group">
+{%- for item in postsx %}
+        <li><a href="{{ item.url }}">{{ item.title | remove:sec_title | remove:" — " | remove:" --- " | smartify }}</a></li>
+{%- endfor %}
+      </ul>
+    </div>
+  </section>
+  </article>
+
+  
+  
+  <article class="book-listing">
+{%- assign sec_title = 'Logic 101' -%}
+{%- assign postsx = site.posts | where: "seriesname",sec_title | sort:"seriesorder" -%}
+  <section>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+         <h4>{{ sec_title }}</h4>
+      </div>
+      <ul class="list-group">
+{%- for item in postsx %}
+        <li><a href="{{ item.url }}">{{ item.title | remove:sec_title | remove:" — " | remove:" --- " | smartify }}</a></li>
+{%- endfor %}
+      </ul>
+    </div>
+  </section>
+  </article>
+
+  
+
+
+  <article class="book-listing">
+{%- assign sec_title = 'The Armor of God' -%}
+{%- assign postsx = site.posts | where: "seriesname",sec_title | sort:"seriesorder" -%}
+  <section>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+         <h4>{{ sec_title }}</h4>
+      </div>
+      <ul class="list-group">
+{%- for item in postsx %}
+        <li><a href="{{ item.url }}">{{ item.title | remove:sec_title | remove:" — " | remove:" --- " | smartify }}</a></li>
+{%- endfor %}
+      </ul>
+    </div>
+  </section>
+  </article>
+
+
+  <article class="book-listing">
+{%- assign sec_title = 'Atheism and Agnosticism' -%}
+{%- assign postsx = site.posts | where: "seriesname",sec_title | sort:"seriesorder" -%}
+  <section>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+         <h4>{{ sec_title }}</h4>
+      </div>
+      <ul class="list-group">
+{%- for item in postsx %}
+        <li><a href="{{ item.url }}">{{ item.title | remove:sec_title | remove:" — " | remove:" --- " | smartify }}</a></li>
+{%- endfor %}
+      </ul>
+    </div>
+  </section>
+  </article>
+
+  
+  </div> <!-- #book-listing-container -->
+  
+</aside> <!-- #window-aside-1 -->
+
+  
+
+
+<aside id='window-aside-2' class='window-aside'>
+
+
+{%- assign var_posts = site.posts | sort:"date" | reverse -%}
+  <!-- Latest Posts -->
+  <section>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+         <h4>Recent Articles</h4>
+      </div>
+      <ul class="list-group" id="recent-posts-ul">{% for post in var_posts limit:5 %}
+        <li><a href="{{ post.url }}">{{ post.title | smartify }}</a></li>{% endfor %}
+      </ul>
+   </div>
+  </section>
+
+  {% capture site_categories %}{% for cat in site.categories %}{{ cat | first }}{% unless forloop.last %},{% endunless %}{% endfor %}{% endcapture %}
+  {% assign var_categories = site_categories | split:',' | sort_natural %}
+  <!-- Categories -->
+  <section>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+         <h4>Categories</h4>
+      </div>
+      <ul class="list-group" id="categories-sidebar">{% for item in var_categories %}{% assign t = item | strip | strip_newlines %}
+        <li><a href="/categories.html#{{ t | slugify }}">{{ t | smartify }}</a><span class="badge">{{ site.categories[t].size }}</span></li>{% endfor %}
+      </ul>
+    </div>
+  </section>
+
+        
+</aside> <!-- #window-aside-2 -->
+
+
+
+<footer id='window-footer'>
+  <div id='window-footer-container'>
+      
+    <section class='window-footer-section' id='window-footer-1'>
+      <h4>Recent Posts</h4>
+        <ul id="recent-posts-footer">{% for post in var_posts limit:5 %}
+          <li><a href="{{ post.url }}">{{ post.title | smartify }}</a></li>{% endfor %}
+        </ul>
+    </section>
+      
+      
+    <section class='window-footer-section' id='window-footer-2'>
+      <h4>Popular Articles</h4>
+      <ul> 
+       <li><a href="{% post_url 2008-01-01-can-you-lose-your-salvation %}">Can You Lose Your Salvation?</a></li>
+       <li><a href="{% post_url 2009-01-01-which-bible-translation-best %}">Which Bible Translation is Best?</a></li>
+       <li><a href="{% post_url 2011-08-15-bible-review-hcsb %}">HCSB Bible Review</a></li>
+       <li><a href="{% post_url 2008-04-09-probability-evolution %}">Evolution Probability</a></li>
+       <li><a href="{% post_url 2011-09-16-matrix-guide-christianity %}">The Matrix Guide to Christianity</a></li>
+      </ul>
+    </section>
+      
+    <section class='window-footer-section' id='window-footer-3'>
+      <p>Have a question? Send <a href="mailto:webmaster@dyeager.org?subject=Web%20Site%20Feedback"><span class="code">webmaster @ dyeager.org</span></a> a message. We want to hear from you, so don’t keep silent.</p>
+      <p><a href="/archives.html">Sitemap</a> • <a href="/page/privacy-policy.html">Privacy&nbsp;Policy</a></p>
+    </section>
+      
+  </div>  <!-- #window-footer-container -->
+    
+  <div id='window-footer-4'>
+    <img class="logo" src="/images/logo.svg" alt="logo" height="65" width="65">
+      <p class="copyright">
+        Copyright <span style="font-size:120%;">©</span>Frames of Reference LLC 1998–{{ "now" | date: "%Y" }}
+      </p>
+  </div>
+    
+</footer>
+  
+</div> <!-- #window-container flex-containter -->
+
+</body>
+</html>

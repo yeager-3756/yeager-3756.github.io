@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="100%"
+   height="100%"
+   viewBox="0 0 550.53 830.89"
+   id="svg2">
+  <defs
+     id="defs9" />
+  <path
+     d="m 266.96,22.5 c -6.989,0 -12.625,5.636 -12.625,12.625 v 9 c -2.294,-2.4005 -5.4959,-3.9062 -9.0938,-3.9062 h -94.656 c -6.989,0 -12.594,5.636 -12.594,12.625 v 7.8125 c 0,6.989 5.6047,12.625 12.594,12.625 h 94.656 c 3.5979,0 6.7997,-1.5058 9.0938,-3.9062 v 36.656 c -11.193,3.2605 -19.344,13.539 -19.344,25.812 v 40.375 h -15.125 c -14.91,0 -26.938,11.996 -26.938,26.906 v 23.562 H 129.74 c -25.493,0 -46.382,19.03 -49.281,43.719 h -0.34375 v 121.66 h -9.3438 c -15.376,0 -27.75,12.374 -27.75,27.75 0,15.376 1.75,15.781 1.75,15.781 h 173.16 c 0,0 1.75,-0.40537 1.75,-15.781 0,-15.37563 -12.873,-31.636 -27.75,-27.75 h -7.6562 v -66.156 h 291.91 v 67.281 c 0,14.91 11.996,26.938 26.906,26.938 1.0481,0 2.0776,-0.072 3.0938,-0.1875 v 0.1875 h 21.844 v -282.59 h -21.844 v 0.1875 c -1.0171,-0.11568 -2.0447,-0.1875 -3.0938,-0.1875 -14.91,0 -22.346,12.711 -26.906,26.906 v 62.25 h -135.22 v -23.562 c 0,-14.91 -11.996,-26.906 -26.906,-26.906 h -15.156 v -40.375 c 0,-12.284 -8.1363,-22.561 -19.344,-25.812 v -36.812 c 2.3018,2.4939 5.6042,4.0625 9.2812,4.0625 h 94.625 c 6.989,0 12.625,-5.636 12.625,-12.625 v -7.8125 c 0,-6.989 -5.636,-12.625 -12.625,-12.625 h -94.625 c -3.6771,0 -6.9794,1.5686 -9.2812,4.0625 v -9.1562 c 0,-6.989 -5.6047,-12.625 -12.594,-12.625 z"
+     id="path3783"
+     style="color:#000000" />
+  <path
+     d="M 134.04,433.82 C 103.97,586.88 20.06,604.49 24.76,700.69 c 3.9157,80.151 63.068,108.25 113.88,107.57 56.129,-0.75102 107.82,-30.326 104.9,-114 -2.698,-77.435 -79.771,-109.41 -109.5,-260.43 z m -6.8225,63.609 5.8195,1.5914 4.752,41.639 c 0,0 9.0772,1.5924 14.564,8.9238 8.7691,10.296 28.331,44.481 28.331,44.481 l -8.1259,23.178 c 0,0 -6.2689,-16.378 -11.067,-21.877 -10.239,-12.934 -22.202,-20.971 -31.094,-18.093 -3.7468,1.1504 -9.0003,6.0973 -9.6146,13.228 -0.83084,9.3494 7.1261,15.445 12.641,20.728 15.686,13.472 37.062,7.4691 54.965,25.898 15.389,14.043 26.412,35.775 33.224,54.083 7.453,20.508 8.839,42.368 -3.6643,56.39 -11.039,10.808 -54.565,16.317 -54.565,16.317 l 12.761,35.486 -59.755,-5.4763 1.5086,-35.14 c 0,0 -24.699,-2.8946 -34.758,-7.4945 -27.416,-13.23 -53.681,-54.66 -53.681,-54.66 l 40.334,-22.338 c 0,0 16.988,21.736 30.494,28.754 16.179,7.9676 36.281,16.424 54.874,13.9 10.307,-1.4419 21.687,-6.8954 21.893,-15.788 0.0243,-13.134 -14.22,-27.918 -25.555,-36.929 -16.75,-14.697 -43.147,-6.6421 -56.879,-20.822 -10.369,-12.6 -15.034,-32.1 -9.151,-51.56 6.004,-19.162 17.717,-39.349 26.753,-51.374 4.6781,-7.4516 13.053,-8.8576 13.053,-8.8576 l 1.9372,-34.198 z"
+     id="path3576"
+     style="color:#000000;fill:#0066ff" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/publicdomain/" />
+        <dc:publisher>
+          <cc:Agent
+             rdf:about="http://openclipart.org/">
+            <dc:title>Openclipart</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title></dc:title>
+        <dc:date>2012-05-09T22:42:19</dc:date>
+        <dc:description>clip art, clipart, cost, dollars, environment, expense, saving, water, </dc:description>
+        <dc:source>http://openclipart.org/detail/169949/water-cost-by-scyg</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>scyg</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>clip art</rdf:li>
+            <rdf:li>clipart</rdf:li>
+            <rdf:li>cost</rdf:li>
+            <rdf:li>dollars</rdf:li>
+            <rdf:li>environment</rdf:li>
+            <rdf:li>expense</rdf:li>
+            <rdf:li>saving</rdf:li>
+            <rdf:li>water</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>

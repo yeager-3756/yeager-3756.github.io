@@ -1,0 +1,21 @@
+---
+layout: default
+---
+<!-- template: page.html -->
+<article class="post post-page">
+  <header><h1>{{ page.title | smartify }}</h1></header>
+
+  <div class="entry-content">
+    <!-- content inserted from template into page.html -->
+    {{ content }}
+    <!-- END content inserted from template into page.html -->
+  </div>
+
+  <footer>
+{%- if page.modified -%}
+     <p style="font-size:80%;">Last updated: <span class="code">{{ page.modified | date: "%Y-%m-%d" }}</span></p>
+{%- endif -%}
+  </footer>
+
+</article>
+<!-- END template: page.html -->

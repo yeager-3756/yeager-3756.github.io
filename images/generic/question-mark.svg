@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1"
+   width="100%"
+   height="100%"
+   viewBox="0 0 22 22"
+   id="svg2">
+  <defs
+     id="defs12" />
+  <rect
+     width="15.166"
+     height="15.166"
+     ry="2.3006001"
+     x="7.9734149"
+     y="-7.585422"
+     transform="matrix(0.70710678,0.70710678,-0.70710678,0.70710678,0,0)"
+     id="rect2985"
+     style="color:#000000;fill:#ffffff;stroke:#d20000;stroke-width:2.454;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
+  <path
+     d="M 13.711218,11.106889 C 14.733582,10.411678 14.856263,8.7623221 14.50184,7.8353538 13.847533,6.0496669 11.666489,5.2453946 8.4086036,6.1314131 7.0318318,6.5267243 6.8683087,8.3942341 7.4953006,9.0212107 c 0.013635,0.013635 0.054526,0.027263 0.1226822,0.013635 C 8.067817,8.8167378 9.3492234,8.2033191 9.7444579,8.1351615 11.243926,7.8898002 11.884583,9.0075761 11.448399,9.7437061 10.616872,11.147747 9.1719276,10.520709 9.3627199,13.124288 c 0.9678411,0.654307 2.7944011,0.204472 2.8353511,-0.340789 0.08179,-1.13141 0.681576,-1.090522 1.513087,-1.67664 m -4.3756459,3.544227 c 0.1772037,0.831511 0.1749338,1.16417 0.6898429,1.354119 0.54523,0.201129 1.318108,0.221466 1.900101,-0.127286 0.460647,-0.276036 0.494741,-1.107424 0.01363,-1.690291 -0.22777,-0.275959 -2.8490016,-0.831511 -2.6036096,0.463469"
+     id="path2992"
+     style="fill:#d20000;fill-opacity:1" />
+  <metadata
+     id="metadata8">
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/publicdomain/" />
+        <dc:publisher>
+          <cc:Agent
+             rdf:about="http://openclipart.org/">
+            <dc:title>Openclipart</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title></dc:title>
+        <dc:date>2011-05-07T09:32:59</dc:date>
+        <dc:description>clip art, clipart, mark, question, sign, </dc:description>
+        <dc:source>http://openclipart.org/detail/137011/simple-question-sign-by-boobaloo</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>boobaloo</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>clip art</rdf:li>
+            <rdf:li>clipart</rdf:li>
+            <rdf:li>mark</rdf:li>
+            <rdf:li>question</rdf:li>
+            <rdf:li>sign</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+</svg>

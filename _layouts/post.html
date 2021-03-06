@@ -1,0 +1,66 @@
+---
+layout: default
+---
+<!-- template: post.html -->
+<article class="post post-full">
+  <header>
+    <h1>{{ page.title | smartify }}</h1>
+  </header>
+
+  <div class="entry-content">
+
+{% if page.isSeries %}
+<aside class="seriesbox">
+  <h4>This post is part of a series <em>{{ page.seriesname | smartify }}</em></h4>
+  <ol>
+    {%- assign series-posts = site.posts | where: "seriesname",page.seriesname | sort:"seriesorder" -%}
+    {% for post in series-posts %}
+    <li>
+      {%- if post.url == page.url -%}
+      {{ post.title | remove:page.seriesname | remove:" — " | remove:" --- " | smartify }}
+      {%- else -%}
+      <a href="{{ post.url }}">{{ post.title | remove:page.seriesname | remove:" — " | remove:" --- " | smartify }}</a>
+      {%- endif -%}
+    </li>
+    {%- endfor %}
+  </ol>
+</aside>
+{% endif %}
+  
+<!-- content inserted from template into post.html -->
+{{ content }}
+<!-- END content inserted from template into post.html -->
+
+
+  </div>  <!-- post.html  div.entry-content -->
+{%- assign var_categories = page.categories | sort_natural -%}
+{% assign var_tags = page.tags  | sort_natural %}
+  <footer>
+    
+    <p>
+      <span class="entry-categories">Filed Under: {% for item in var_categories %}{% assign t = item | strip | strip_newlines %}
+        <a href="/categories.html#{{ t | slugify }}">{{ t | smartify }}</a>{% unless forloop.last %} • {% endunless %}{% endfor %}
+      </span>
+    </p>
+    <p>
+      <span class="entry-tags">Tagged: {% for item in var_tags %}{% assign t = item | strip | strip_newlines %}
+        <a href="/tags.html#{{ t | slugify }}">{{t | smartify }}</a>{% unless forloop.last %} • {% endunless %}{% endfor %}
+      </span>
+    </p>
+    
+    <div id="LWJQ_endnotes"></div>
+  
+    <div class='content-box-blue'>
+      <p><strong>Recommended Citation:</strong><br>
+        Yeager, Darrin "{{ page.title | smartify }}" ({{ "now" | date: "%Y-%m-%d %H:%M" }}),<br>
+        <code>{{ site.url}}{{ page.url }}</code><br>
+        Copyright 1998–{{ "now" | date: "%Y" }}. All rights reserved.
+      </p>
+    </div>
+    
+  </footer>
+  
+    
+  
+</article>
+<!-- END template: post.html -->
