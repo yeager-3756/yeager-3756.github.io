@@ -56,13 +56,6 @@ copy for accuracy; translation forces a compromise of sorts, subject to
 the personal ideas of the translator (which explains why we must
 understand the personal ideas of the translator).
 
-<div class="content-box-green">
-<p>Interested in more about Bible translation? Sign up using the form on
-the right, and you'll have free access to an eBook on Bible translation,
-weekly updates, a free chapter from my book, and more! Sign up for free
-today, quit anytime.</p>
-</div>
-
 The idea a *perfect* translation exists quickly
 disappears — they *all* have problems; understanding which
 translations have which problems is important. In the following

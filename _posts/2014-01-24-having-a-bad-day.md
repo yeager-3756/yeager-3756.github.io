@@ -1,4 +1,3 @@
-
 ---
 title: Having a Bad Day?
 date: 2014-01-24

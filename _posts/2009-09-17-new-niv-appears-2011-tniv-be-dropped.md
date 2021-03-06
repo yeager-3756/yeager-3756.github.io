@@ -20,10 +20,6 @@ they don’t just update English, but actually change doctrines to fit
 their liberal theology — all under the guise of “updating” the
 venerable KJV.
 
-<div class="content-box-green">
-<p style="margin:0">Interested in more about Bible translation? Sign up using the form on the right, and you'll have free access to an eBook on Bible translation, weekly updates, a free chapter from my book, and more! Sign up for free today, quit anytime.</p>
-</div>
-
 Don’t be fooled — what God wrote, He wrote. Nobody has to believe it,
 like it, or accept it, but to claim God didn’t want His Word to apply
 today strikes us as the height of hubris. Once you go down that road,

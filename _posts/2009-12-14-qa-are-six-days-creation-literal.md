@@ -3,17 +3,15 @@ title: Are the Six Days of Creation Literal?
 date: 2009-12-14
 slug: are-six-days-of-creation-literal
 category: Science
-summary: In Genesis, are the six days literal 24 days, or ages?
+summary: In Genesis, are the six days literal 24 hour days, or ages?
 tags: 
   - Creation
   - Science
 redirect_from:
   - /2009/12/qa-are-six-days-creation-literal.html
------
+---
 
 
-
-> Q: What are your views on the literal six days of creation?
 
 A debate rages regarding the meaning of “day” in Genesis. Some argue the
 day means what we understand it to be — a period of 24 hours — while

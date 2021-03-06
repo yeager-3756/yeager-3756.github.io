@@ -811,10 +811,10 @@ aside.window-aside  section div.well h2 {
   
   --content-box-blue-background: #d8ecf7;
   --content-box-blue-border: #afcde3;
-  --content-box-blue-text: ##000;
+  --content-box-blue-text: #000;
   --content-box-gray-background: #e2e2e2;
   --content-box-gray-border: #bdbdbd;
-  --content-box-gray-text: ##CCC;
+  --content-box-gray-text: #CCC;
   --content-box-green-background: #d9edc2;
   --content-box-green-border: #b2ce96;
   --content-box-green-text: #000;
@@ -865,7 +865,7 @@ aside.window-aside  section div.well h2 {
     --content-box-blue-text: #d5ebf6;
     --content-box-gray-background: #666;
     --content-box-gray-border: #bdbdbd;
-    --content-box-gray-text: ##CCC;
+    --content-box-gray-text: #CCC;
     --content-box-green-background: #4f7623;
     --content-box-green-border: #b2ce96;
     --content-box-green-text: #e6f3d8;
